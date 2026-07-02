@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="form-container">
+    <h1>Login</h1>
+    <form method="POST" action="{{ url_for('login') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username"
+               value="{{ username if username else '' }}"
+               required autocomplete="username">
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"
+               required autocomplete="current-password">
+
+        {% if totp_required %}
+        <label for="totp_code">Authenticator Code</label>
+        <input type="text" id="totp_code" name="totp_code"
+               inputmode="numeric" pattern="[0-9]{6}" maxlength="6"
+               title="6-digit code from your authenticator app"
+               required autocomplete="one-time-code">
+        {% endif %}
+
+        <button type="submit">Login</button>
+    </form>
+    <p class="alt-link">Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
+</div>
+{% endblock %}

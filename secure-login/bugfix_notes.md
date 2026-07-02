@@ -1,0 +1,3 @@
+- Fixed syntax error in app.py login 2FA branch.
+- Removed qrcode[pil] and pillow from requirements.txt to avoid build errors.
+- Verified routes via test client: /login, /register, /dashboard, /setup-2fa.

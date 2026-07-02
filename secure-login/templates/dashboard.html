@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="dashboard">
+    <h1>Dashboard</h1>
+    <div class="card">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>2FA:</strong>
+            {% if user.totp_enabled %}
+                <span class="badge badge-success">Enabled</span>
+            {% else %}
+                <span class="badge badge-warning">Disabled</span>
+            {% endif %}
+        </p>
+    </div>
+    <div class="actions">
+        <a href="{{ url_for('setup_2fa') }}" class="button">Manage 2FA</a>
+        <a href="{{ url_for('logout') }}" class="button button-secondary">Logout</a>
+    </div>
+</div>
+{% endblock %}

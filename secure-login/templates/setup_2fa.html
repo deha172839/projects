@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}2FA Settings{% endblock %}
+{% block content %}
+<div class="form-container">
+    <h1>Two-Factor Authentication</h1>
+
+    {% if totp_enabled %}
+        <div class="card">
+            <h2>2FA is enabled</h2>
+            {% if qr_uri %}
+                <p>Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.):</p>
+                <div class="qr-wrapper">
+                    <img src="{{ qr_uri }}" alt="TOTP QR Code">
+                </div>
+                <p><small>Or enter this key manually: <code>{{ user.totp_secret }}</code></small></p>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('setup_2fa') }}" style="margin-top:1rem;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="action" value="verify">
+                <label for="code">Verify a code from your app:</label>
+                <input type="text" id="code" name="code" inputmode="numeric"
+                       pattern="[0-9]{6}" maxlength="6" required>
+                <button type="submit">Verify Code</button>
+            </form>
+
+            <form method="POST" action="{{ url_for('setup_2fa') }}" style="margin-top:1rem;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="action" value="disable">
+                <button type="submit" class="button-danger">Disable 2FA</button>
+            </form>
+        </div>
+    {% else %}
+        <div class="card">
+            <h2>2FA is disabled</h2>
+            <p>Enabling two-factor authentication adds an extra layer of security to your account.</p>
+
+            <form method="POST" action="{{ url_for('setup_2fa') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="action" value="enable">
+                <label for="password">Confirm your password to enable 2FA:</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">Enable 2FA</button>
+            </form>
+        </div>
+    {% endif %}
+
+    <p class="alt-link"><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
+</div>
+{% endblock %}
